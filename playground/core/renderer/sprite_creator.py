@@ -1,0 +1,1 @@
+# Some kind of more abstract resource creator instead? Let's see.

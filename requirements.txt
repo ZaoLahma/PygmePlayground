@@ -1,0 +1,2 @@
+# All front end stuff
+pygame>=2.5.1
