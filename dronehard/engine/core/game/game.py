@@ -1,4 +1,4 @@
-from core.event.event_quit import EventQuit
+from engine.core.event.event_quit import EventQuit
 import time
 
 # The thing that makes all other things do things
@@ -8,7 +8,8 @@ class Game():
         self.m_useBusyLoop = useBusyLoop
         self.m_targetFrameTime = 1.0 / self.m_targetFPS
         self.m_runHooks = []
-        self.m_flipHook = None
+        self.m_preFrameHooks = []
+        self.m_postFrameHooks = []
         self.m_running = False
 
     # The game loop. Can either use busy loop (hog the CPU until it's time to do stuff) 
@@ -23,12 +24,14 @@ class Game():
             prevTime = time.perf_counter()
 
             # Allow all registered components to run each frame
+            for preFrameHook in self.m_preFrameHooks:
+                preFrameHook()
+
             for runHook in self.m_runHooks:
                 runHook()
 
-            # Perform screen flip (apply changes to graphics)
-            if None != self.m_flipHook:
-                self.m_flipHook()
+            for postFrameHook in self.m_postFrameHooks:
+                postFrameHook()
 
             currentTime = time.perf_counter()
 
@@ -41,10 +44,10 @@ class Game():
                 toSleep = self.m_targetFrameTime - deltaTimeS
                 if toSleep > 0:
                     time.sleep(toSleep)
-            totalFrameTime = (time.perf_counter() - prevTime) * 1000
-            print("Total frame time: " + "{:.4f}".format(totalFrameTime) + "ms")
-            fps = 1000 / totalFrameTime
-            print("fps: " + "{:.4f}".format(fps))
+            #totalFrameTime = (time.perf_counter() - prevTime) * 1000
+            #print("Total frame time: " + "{:.4f}".format(totalFrameTime) + "ms")
+            #fps = 1000 / totalFrameTime
+            #print("fps: " + "{:.4f}".format(fps))
 
 
     # Ugly-ish hack-ish way of hooking in the Game class to the event handling parts
@@ -55,9 +58,14 @@ class Game():
     def registerRunHook(self, hook):
         self.m_runHooks.append(hook)
 
+
     # Make it possible to update graphics in a controlled manner
-    def registerFlipHook(self, flipHook):
-        self.m_flipHook = flipHook
+    def registerPreFrameHook(self, preFrameHook):
+        self.m_preFrameHooks.append(preFrameHook)
+
+    # Make it possible to update graphics in a controlled manner
+    def registerPostFrameHook(self, postFrameHook):
+        self.m_postFrameHooks.append(postFrameHook)
 
     # React to the events 
     def handleEvent(self, event):

@@ -1,4 +1,4 @@
-from core.event.event_base import EventBase
+from engine.core.event.event_base import EventBase
 
 # Well, you know, quit
 class EventQuit(EventBase):

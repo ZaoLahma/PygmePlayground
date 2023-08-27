@@ -1,4 +1,4 @@
-from core.scene.layer import Layer
+from engine.core.scene.layer import Layer
 
 # Handle graphics layers
 # TODO: Take camera (position) into consideration. Don't render objects that aren't visible
