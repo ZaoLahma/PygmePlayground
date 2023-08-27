@@ -8,6 +8,8 @@ from core.renderer.renderer import Renderer
 from core.scene.scene_manager import SceneManager
 from core.scene.scene import Scene
 
+from random import randint
+
 class Circle(GameObjectBase):
     def __init__(self, position):
         GameObjectBase.__init__(self, position)
@@ -26,8 +28,10 @@ if __name__ == "__main__":
     renderer = Renderer(window.getDisplay())
     sceneManager = SceneManager(renderer, game)
     scene = Scene()
-    layer = scene.addLayer()
-    layer.addObject(Circle((40, 40)))
+    for n in range (1, 10):
+        layer = scene.addLayer()
+        for i in range(1, 10):
+            layer.addObject(Circle((randint(10, 620), randint(10, 460))))
     sceneManager.setActiveScene(scene)
 
     # Fire in the hole

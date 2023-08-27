@@ -41,7 +41,7 @@ class Game():
                 toSleep = self.m_targetFrameTime - deltaTimeS
                 if toSleep > 0:
                     time.sleep(toSleep)
-            totalFrameTime = (time.perf_counter() - currentTime) * 1000
+            totalFrameTime = (time.perf_counter() - prevTime) * 1000
             print("Total frame time: " + "{:.4f}".format(totalFrameTime) + "ms")
             fps = 1000 / totalFrameTime
             print("fps: " + "{:.4f}".format(fps))
