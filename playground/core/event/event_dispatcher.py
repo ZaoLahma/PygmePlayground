@@ -1,7 +1,6 @@
 # Throw stuff around without direct dependencies between classes
 class EventDispatcher():
     def __init__(self, game):
-        print("CTOR called")
         self.m_eventHandlers = []
         self.m_events = []
         game.registerRunHook(self.run_hook)

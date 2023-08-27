@@ -8,6 +8,7 @@ class Game():
         self.m_useBusyLoop = useBusyLoop
         self.m_targetFrameTime = 1.0 / self.m_targetFPS
         self.m_runHooks = []
+        self.m_flipHook = None
         self.m_running = False
 
     # The game loop. Can either use busy loop (hog the CPU until it's time to do stuff) 
@@ -21,11 +22,17 @@ class Game():
         while self.m_running:
             prevTime = time.perf_counter()
 
+            # Allow all registered components to run each frame
             for runHook in self.m_runHooks:
                 runHook()
 
+            # Perform screen flip (apply changes to graphics)
+            if None != self.m_flipHook:
+                self.m_flipHook()
+
             currentTime = time.perf_counter()
 
+            # Consistent frame times, please
             if self.m_useBusyLoop:
                 while time.perf_counter() < currentTime + self.m_targetFrameTime:
                     pass
@@ -47,6 +54,10 @@ class Game():
     # Provide an opportunity to run code for every frame of the game
     def registerRunHook(self, hook):
         self.m_runHooks.append(hook)
+
+    # Make it possible to update graphics in a controlled manner
+    def registerFlipHook(self, flipHook):
+        self.m_flipHook = flipHook
 
     # React to the events 
     def handleEvent(self, event):
