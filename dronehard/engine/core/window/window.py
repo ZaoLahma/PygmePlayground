@@ -17,7 +17,7 @@ class Window:
         return self.m_window
 
     # Handle events in every frame
-    def runHook(self):
+    def runHook(self, deltaTime):
         for event in pygame.event.get():
             if pygame.QUIT == event.type:
                 self.m_eventDispatcher.addEvent(EventQuit())

@@ -13,7 +13,7 @@ class EventDispatcher():
         self.m_events.append(event)
 
     # Will be executed for every frame
-    def run_hook(self):
+    def run_hook(self, deltaTime):
         for eventHandler in self.m_eventHandlers:
             for event in self.m_events:
                 eventHandler(event)

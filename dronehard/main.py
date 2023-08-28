@@ -7,7 +7,7 @@ from engine.core.renderer.renderer import Renderer
 from game.logic.drone_hard import DroneHard
 
 if __name__ == "__main__":
-    game = Game(targetFPS = 60, useBusyLoop = False)
+    game = Game(targetFPS = 60)
     eventDispatcher = EventDispatcher(game)
     game.registerEventDispatcher(eventDispatcher)
     window = Window(game, eventDispatcher)

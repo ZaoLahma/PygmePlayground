@@ -7,6 +7,6 @@ class SceneManager():
     def setActiveScene(self, scene):
         self.m_activeScene = scene
 
-    def renderActiveScene(self):
+    def renderActiveScene(self, deltaTime):
         if None != self.m_activeScene:
             self.m_activeScene.renderScene(self.m_renderer)

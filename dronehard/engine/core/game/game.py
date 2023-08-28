@@ -1,11 +1,12 @@
 from engine.core.event.event_quit import EventQuit
+import pygame
 import time
 
 # The thing that makes all other things do things
 class Game():
-    def __init__(self, targetFPS, useBusyLoop = True):
+    def __init__(self, targetFPS):
         self.m_targetFPS = targetFPS
-        self.m_useBusyLoop = useBusyLoop
+        self.m_clock = pygame.time.Clock()
         self.m_targetFrameTime = 1.0 / self.m_targetFPS
         self.m_runHooks = []
         self.m_preFrameHooks = []
@@ -19,35 +20,29 @@ class Game():
     def run(self):
         self.m_running = True
         prevTime = time.perf_counter()
-        currentTime = prevTime
+        currTime = prevTime
         while self.m_running:
-            prevTime = time.perf_counter()
+            frameStartTime = time.perf_counter()
+            prevTime = currTime
+            deltaTime = frameStartTime - prevTime
 
             # Allow all registered components to run each frame
             for preFrameHook in self.m_preFrameHooks:
                 preFrameHook()
 
             for runHook in self.m_runHooks:
-                runHook()
+                runHook(deltaTime)
 
             for postFrameHook in self.m_postFrameHooks:
                 postFrameHook()
 
-            currentTime = time.perf_counter()
-
             # Consistent frame times, please
-            if self.m_useBusyLoop:
-                while time.perf_counter() < currentTime + self.m_targetFrameTime:
-                    pass
-            else:
-                deltaTimeS = (currentTime - prevTime)
-                toSleep = self.m_targetFrameTime - deltaTimeS
-                if toSleep > 0:
-                    time.sleep(toSleep)
-            #totalFrameTime = (time.perf_counter() - prevTime) * 1000
-            #print("Total frame time: " + "{:.4f}".format(totalFrameTime) + "ms")
-            #fps = 1000 / totalFrameTime
-            #print("fps: " + "{:.4f}".format(fps))
+            self.m_clock.tick(self.m_targetFPS)
+
+            totalFrameTime = (time.perf_counter() - frameStartTime) * 1000
+            print("Total frame time: " + "{:.4f}".format(totalFrameTime) + "ms")
+            fps = 1000 / totalFrameTime
+            print("fps: " + "{:.4f}".format(fps))
 
 
     # Ugly-ish hack-ish way of hooking in the Game class to the event handling parts
